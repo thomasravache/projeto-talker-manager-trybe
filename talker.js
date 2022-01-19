@@ -50,14 +50,12 @@ router.post('/', async (req, res) => {
     const talkers = await readTalkerFile();
     const maxId = talkers.map((t) => parseInt(t.id, 10)).reduce((a, b) => Math.max(a, b));
     const id = !maxId ? 1 : maxId + 1;
-    talkers.push({
-      id,
-      name,
-      age,
-      talk,
-    });
+
+    talkers.push({ id, name, age, talk });
     const talker = talkers.find((t) => parseInt(t.id, 10) === id);
+
     await writeTalkerFile(talkers);
+
     return res.status(201).json(talker);
   } catch (e) {
     return res.status(404).json({ message: e.message });
