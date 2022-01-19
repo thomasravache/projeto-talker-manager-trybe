@@ -39,6 +39,24 @@ router.get('/:id', async (req, res) => {
 });
 
 router.use(authentication);
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const talkers = await readTalkerFile();
+    const talkerIndex = talkers.findIndex((talker) => parseInt(talker.id, 10) === parseInt(id, 10));
+    
+    if (talkerIndex === -1) throw new Error('Talker informado não existe');
+
+    talkers.splice(talkerIndex, 1);
+    await writeTalkerFile(talkers);
+
+    return res.status(204).end();
+  } catch (e) {
+    return res.status(404).json({ message: e.message });
+  }
+});
+
 router.use(nameValidator);
 router.use(ageValidator);
 router.use(talkValidator);
