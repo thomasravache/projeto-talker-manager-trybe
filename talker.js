@@ -62,4 +62,23 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkers = await readTalkerFile();
+    const talkerIndex = talkers.findIndex((talker) => parseInt(talker.id, 10) === parseInt(id, 10));
+
+    if (talkerIndex === -1) throw new Error('Talker não existe');
+
+    talkers[talkerIndex] = { ...talkers[talkerIndex], age, name, talk };
+
+    await writeTalkerFile(talkers);
+  
+    return res.status(200).json(talkers[talkerIndex]);
+  } catch (e) {
+    return res.status(400).json({ message: e.message });
+  }
+});
+
 module.exports = router;

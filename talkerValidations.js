@@ -25,7 +25,7 @@ const ageValidator = (req, res, next) => {
 const talkValidator = (req, res, next) => {
   const { talk = {} } = req.body;
   const { watchedAt, rate } = talk;
-  const validation = [watchedAt, rate].some((field) => !field);
+  const validation = [watchedAt, rate].some((field) => field === undefined);
   const message = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
 
   if (validation) return res.status(400).json({ message });
