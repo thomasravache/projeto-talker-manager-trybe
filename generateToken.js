@@ -1,3 +1,5 @@
 const crypto = require('crypto');
 
-module.exports = () => crypto.randomBytes(8).toString('hex');
+const token = crypto.randomBytes(8).toString('hex');
+
+module.exports = token;
