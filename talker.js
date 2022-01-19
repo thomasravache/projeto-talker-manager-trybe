@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const authentication = require('./authentication');
 const { nameValidator, ageValidator, talkValidator,
-    watchedAtValidator, rateValidator } = require('./talkerValidations');
+validateTalkProperties } = require('./talkerValidations');
 
 const router = express.Router();
 
@@ -42,12 +42,11 @@ router.use(authentication);
 router.use(nameValidator);
 router.use(ageValidator);
 router.use(talkValidator);
-router.use(watchedAtValidator);
-router.use(rateValidator);
+router.use(validateTalkProperties);
 
 router.post('/', async (req, res) => {
   try {
-    const { name, age, watchedAt, rate } = req.body;
+    const { name, age, talk } = req.body;
     const talkers = await readTalkerFile();
     const maxId = talkers.map((t) => parseInt(t.id, 10)).reduce((a, b) => Math.max(a, b));
     const id = !maxId ? 1 : maxId + 1;
@@ -55,7 +54,7 @@ router.post('/', async (req, res) => {
       id,
       name,
       age,
-      talk: { watchedAt, rate },
+      talk,
     });
     const talker = talkers.find((t) => parseInt(t.id, 10) === id);
     await writeTalkerFile(talkers);
