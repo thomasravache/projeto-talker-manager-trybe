@@ -1,9 +1,7 @@
 const express = require('express');
-const crypto = require('crypto');
+const generateToken = require('./generateToken');
 
 const router = express.Router();
-
-const generateToken = () => crypto.randomBytes(8).toString('hex');
 
 router.post('/', (req, res) => {
   const { email, password } = req.body;
